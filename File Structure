@@ -1,0 +1,47 @@
+QUANT-LLM-ASSISTANT/
+│
+├── api/
+│   ├── main.py
+│   ├── grpc_server.py
+│   ├── schemas/
+│   └── dependencies.py
+│
+├── models/
+│   ├── llm_router.py
+│   ├── embeddings.py
+│   ├── model_registry.py
+│   └── drift_monitor.py
+│
+├── vector_store/
+│   ├── faiss_index.py
+│   └── retriever.py
+│
+├── streaming/
+│   ├── kafka_producer.py
+│   └── kafka_consumer.py
+│
+├── caching/
+│   └── redis_cache.py
+│
+├── monitoring/
+│   ├── prometheus_metrics.py
+│   └── tracing.py
+│
+├── benchmarks/
+│   └── latency_benchmark.py
+│
+├── load_tests/
+│   └── locustfile.py
+│
+├── data/
+│   └── synthetic_financial_data.py
+│
+├── infra/
+│   ├── k8s/
+│   ├── helm/
+│   └── terraform/
+│
+├── tests/
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
