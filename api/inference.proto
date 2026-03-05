@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+service QuantLLMService {
+  rpc Query (QueryRequest) returns (QueryResponse);
+}
+
+message QueryRequest {
+  string question = 1;
+}
+
+message QueryResponse {
+  string answer = 1;
+  float confidence = 2;
+}
