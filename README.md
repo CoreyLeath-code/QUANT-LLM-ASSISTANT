@@ -1,16 +1,18 @@
 QUANT LLM ASSISTANT – Financial Intelligence Platform
+![Python](https://img.shields.io/badge/Python-Production%20ML-blue?logo=python)
+![LLM System](https://img.shields.io/badge/LLM-Agent%20Pipeline-red)
+![LangChain](https://img.shields.io/badge/LangChain-Orchestration-yellow)
+![Quant Models](https://img.shields.io/badge/Models-Quantitative%20Analysis-green)
+![Time Series](https://img.shields.io/badge/Data-Time%20Series%20Forecasting-orange)
+![AI System](https://img.shields.io/badge/System-End--to--End%20AI-purple)
+![Financial AI](https://img.shields.io/badge/AI-Financial%20Intelligence-critical)
+![Research](https://img.shields.io/badge/Type-AI%20Research-black)
+![Status](https://img.shields.io/badge/Status-Portfolio%20Ready-brightgreen)
+![Maintained](https://img.shields.io/badge/Maintained-Yes-success)
+![Last Commit](https://img.shields.io/github/last-commit/Trojan3877/QUANT-LLM-ASSISTANT)
+![Repo Size](https://img.shields.io/github/repo-size/Trojan3877/QUANT-LLM-ASSISTANT)
+![Stars](https://img.shields.io/github/stars/Trojan3877/QUANT-LLM-ASSISTANT?style=social)
 
-![CI](https://github.com/Trojan3877/QUANT-LLM-ASSISTANT/actions/workflows/ci.yml/badge.svg)
-![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker)
-![Kafka](https://img.shields.io/badge/Kafka-Streaming-black?logo=apachekafka)
-![Redis](https://img.shields.io/badge/Redis-Caching-red?logo=redis)
-![FAISS](https://img.shields.io/badge/FAISS-VectorDB-blue)
-![gRPC](https://img.shields.io/badge/gRPC-HighPerformance-blue)
-![Prometheus](https://img.shields.io/badge/Monitoring-Prometheus-orange?logo=prometheus)
-![OpenTelemetry](https://img.shields.io/badge/Tracing-Enabled-purple)
-![Locust](https://img.shields.io/badge/Load_Testing-Enabled-green)
-![A/B Testing](https://img.shields.io/badge/A/B_Testing-Enabled-yellow)
-![Security](https://img.shields.io/badge/Trivy-Scanned-red)
 
 
 
