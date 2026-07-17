@@ -1,45 +1,32 @@
+"""Command-line entry point."""
+
 import argparse
-from .data_client import DataClient
+
+from .data_client import DataClient, validate_symbol
 from .llm_agent import LLMAgent
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="LLM-Powered Quantitative Research Assistant"
+
+def build_prompt(query: str, symbol: str | None, data_client: DataClient | None = None) -> str:
+    if not symbol:
+        return query
+    ticker = validate_symbol(symbol)
+    payload = (data_client or DataClient()).get_daily_time_series(ticker)
+    series = payload["Time Series (Daily)"]
+    latest_date = max(series)
+    latest_close = float(series[latest_date]["4. close"])
+    return (
+        f"Observed market-data context (untrusted): symbol={ticker}; date={latest_date}; "
+        f"close={latest_close:.4f}.\nResearch question: {query}"
     )
-    parser.add_argument(
-        "--query", "-q", type=str, required=True,
-        help="Natural-language query for the assistant"
-    )
-    parser.add_argument(
-        "--symbol", "-s", type=str, default=None,
-        help="Optional ticker symbol context (e.g., AAPL)"
-    )
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="LLM-powered quantitative research assistant")
+    parser.add_argument("--query", "-q", required=True)
+    parser.add_argument("--symbol", "-s")
     args = parser.parse_args()
+    print(LLMAgent().ask(build_prompt(args.query, args.symbol)))
 
-    # Initialize clients
-    data_client = DataClient()
-    agent = LLMAgent()
-
-    # If a symbol is provided, fetch some data to give context
-    context = ""
-    if args.symbol:
-        ts = data_client.get_daily_time_series(args.symbol, outputsize="compact")
-        # Simple context prep: latest close price
-        latest_date = sorted(ts["Time Series (Daily)"].keys())[-1]
-        latest_close = ts["Time Series (Daily)"][latest_date]["4. close"]
-        context = (
-            f"The latest closing price for {args.symbol} on {latest_date} "
-            f"was {latest_close}.\n"
-        )
-
-    prompt = context + args.query
-    print("🧠 Sending to LLM…")
-    response = agent.ask(prompt)
-    print("\n💡 Assistant Response:\n")
-    print(response)
 
 if __name__ == "__main__":
     main()
-
-git add src/main.py
-git commit -m "Add CLI entrypoint script in src/main.py"

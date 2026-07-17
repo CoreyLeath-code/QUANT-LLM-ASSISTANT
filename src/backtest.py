@@ -1,75 +1,64 @@
+"""Small, deterministic backtesting engine for researchâ€”not trade execution."""
+
+from __future__ import annotations
+
+from collections.abc import Callable
+from typing import Any
+
 import pandas as pd
-from typing import Callable, Dict, Any
+
 
 class BacktestEngine:
-    """
-    Simple backtesting engine for evaluating trading strategies.
-    """
-
     def __init__(
         self,
         price_data: pd.DataFrame,
         strategy_fn: Callable[[pd.DataFrame], pd.Series],
-        initial_cash: float = 100000.0
-    ):
-        """
-        :param price_data: DataFrame with a DateTime index and at least a 'close' column.
-        :param strategy_fn: Function that takes price_data and returns a Series of positions (-1, 0, 1).
-        :param initial_cash: Starting cash balance.
-        """
-        self.price_data = price_data
+        initial_cash: float = 100_000.0,
+    ) -> None:
+        if price_data.empty or "close" not in price_data:
+            raise ValueError("price_data must contain at least one row and a 'close' column")
+        if not price_data.index.is_unique or not price_data.index.is_monotonic_increasing:
+            raise ValueError("price_data index must be unique and ordered")
+        closes = pd.to_numeric(price_data["close"], errors="coerce")
+        if closes.isna().any() or (closes <= 0).any():
+            raise ValueError("close prices must be finite positive numbers")
+        if initial_cash <= 0:
+            raise ValueError("initial_cash must be positive")
+        self.price_data = price_data.copy()
+        self.price_data["close"] = closes
         self.strategy_fn = strategy_fn
-        self.initial_cash = initial_cash
-        self.trades = None
-        self.equity_curve = None
+        self.initial_cash = float(initial_cash)
+        self.equity_curve: pd.DataFrame | None = None
 
     def run(self) -> pd.DataFrame:
-        """
-        Execute the backtest and generate an equity curve.
-        :return: DataFrame with 'cash', 'position', 'holdings', and 'total' equity over time.
-        """
         signals = self.strategy_fn(self.price_data)
-        cash = self.initial_cash
-        position = 0
-        equity = []
+        if not signals.index.equals(self.price_data.index):
+            raise ValueError("strategy signals must exactly align with price_data")
+        if signals.isna().any() or not signals.isin((-1, 0, 1)).all():
+            raise ValueError("strategy positions must be -1, 0, or 1")
 
-        for timestamp, row in self.price_data.iterrows():
-            price = row["close"]
-            target_pos = signals.loc[timestamp]
-            # Determine trade size (all-in/all-out for now)
-            if target_pos != position:
-                # Sell existing
+        cash, position, equity = self.initial_cash, 0, []
+        for timestamp, price in self.price_data["close"].items():
+            target = int(signals.loc[timestamp])
+            if target != position:
                 cash += position * price
-                # Buy new
-                cash -= target_pos * price
-                position = target_pos
-
+                cash -= target * price
+                position = target
             holdings = position * price
-            total = cash + holdings
-            equity.append({
-                "timestamp": timestamp,
-                "cash": cash,
-                "position": position,
-                "holdings": holdings,
-                "total": total
-            })
-
+            equity.append(
+                {"timestamp": timestamp, "cash": cash, "position": position,
+                 "holdings": holdings, "total": cash + holdings}
+            )
         self.equity_curve = pd.DataFrame(equity).set_index("timestamp")
-        return self.equity_curve
+        return self.equity_curve.copy()
 
-    def stats(self) -> Dict[str, Any]:
-        """
-        Compute basic backtest statistics: total return, CAGR, max drawdown, etc.
-        :return: Dict of performance metrics.
-        """
-        df = self.equity_curve["total"]
-        total_return = df.iloc[-1] / df.iloc[0] - 1
-        # (Additional metrics can be implemented here.)
+    def stats(self) -> dict[str, Any]:
+        if self.equity_curve is None:
+            raise RuntimeError("run() must be called before stats()")
+        totals = self.equity_curve["total"]
+        running_peak = totals.cummax()
+        drawdown = totals / running_peak - 1
         return {
-            "total_return": total_return,
-            # "cagr": ...,
-            # "max_drawdown": ...,
+            "total_return": float(totals.iloc[-1] / self.initial_cash - 1),
+            "max_drawdown": float(drawdown.min()),
         }
-
-git add src/backtest.py
-git commit -m "Add backtesting engine scaffold in src/backtest.py"

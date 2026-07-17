@@ -26,6 +26,3 @@ COPY . .
 
 # Default command (adjust as needed)
 ENTRYPOINT ["python", "-m", "src.main"]
-
-git add Dockerfile
-git commit -m "Add Dockerfile for containerization"
