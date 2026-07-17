@@ -21,7 +21,7 @@ jobs:
       - run: python -m pip install --upgrade pip "setuptools>=83" && pip install -e ".[dev]"
       - run: ruff check src tests
       - run: mypy src/config.py src/data_client.py src/llm_agent.py
-      - run: pytest
+      - run: python -m pytest
       - run: python -m benchmarks.latency_benchmark --max-seconds 0.25
 
   security:
