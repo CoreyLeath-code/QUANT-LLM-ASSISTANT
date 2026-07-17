@@ -20,6 +20,3 @@ spec:
     - hosts:
         - quant.example.com
       secretName: quant-llm-tls        # TLS secret must exist in this namespace
-
-git add k8s/ingress.yaml
-git commit -m "Add Kubernetes Ingress manifest"
