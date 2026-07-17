@@ -1,88 +1,54 @@
-QUANT LLM ASSISTANT – Financial Intelligence Platform
+# Quant LLM Assistant
 
-![Python](https://img.shields.io/badge/Python-Production%20ML-blue?logo=python)
-![LLM System](https://img.shields.io/badge/LLM-Agent%20Pipeline-red)
-![LangChain](https://img.shields.io/badge/LangChain-Orchestration-yellow)
-![Quant Models](https://img.shields.io/badge/Models-Quantitative%20Analysis-green)
-![Time Series](https://img.shields.io/badge/Data-Time%20Series%20Forecasting-orange)
-![AI System](https://img.shields.io/badge/System-End--to--End%20AI-purple)
-![Financial AI](https://img.shields.io/badge/AI-Financial%20Intelligence-critical)
-![Research](https://img.shields.io/badge/Type-AI%20Research-black)
-![Status](https://img.shields.io/badge/Status-Portfolio%20Ready-brightgreen)
-![Maintained](https://img.shields.io/badge/Maintained-Yes-success)
-![Last Commit](https://img.shields.io/github/last-commit/Trojan3877/QUANT-LLM-ASSISTANT)
-![Repo Size](https://img.shields.io/github/repo-size/Trojan3877/QUANT-LLM-ASSISTANT)
-![Stars](https://img.shields.io/github/stars/Trojan3877/QUANT-LLM-ASSISTANT?style=social)
-[![Continuous Integration](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/ci-cd.yml)
-[![Code Quality Assurance](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/ci.yml/badge.svg)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/ci.yml)
-[![Security Analysis](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/security.yml/badge.svg)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/security.yml)
-[![SAST Code Flaw Scan](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/sast.yml/badge.svg)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/sast.yml)
-[![Performance Benchmarks](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/benchmarks.yml/badge.svg)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/benchmarks.yml)
-[![Schema Validation](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/data-validation.yml/badge.svg)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/data-validation.yml)
-[![Automated Release](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/release.yml/badge.svg)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/release.yml)
-[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
-[![Streaming: Apache Kafka](https://img.shields.io/badge/Streaming-Kafka-black?logo=apachekafka)](https://kafka.apache.org/)
-[![Database: Vector](https://img.shields.io/badge/Database-VectorSpace-orange)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT)
-[![Code Style: Flake8](https://img.shields.io/badge/code%20style-flake8-black)](https://flake8.pycqa.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+A guardrailed command-line assistant for quantitative research. It combines validated market-data
+context with an LLM summary and includes a deterministic research backtester. It does not execute
+orders and its output is not investment advice.
 
-## 🏛️ Architectural Topology
+## Quick start
 
-[ Real-Time Financial Feeds ] ──> [ Apache Kafka Data Streams ]
-│
-▼
-[ Vector Storage Layer ]
-│
-▼
-[ Orchestration Supervisor ]
-⚡ Latency Profile Matrix
-/        │
+Requires Python 3.11+.
 
-/         │
+```bash
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -e ".[dev]"
+cp .env.example .env
+python -m src.main --symbol AAPL --query "Summarize the observed close and limitations"
+```
 
-▼          ▼          ▼
-[Quant Agent] [Risk Agent] [Macro Agent]
+`OPENAI_API_KEY` is required for every query. `DATA_API_KEY` is required only when `--symbol` is
+used. Configuration is validated at the point of use, so importing the package does not require
+credentials.
 
+## Trust boundaries
 
-### 🧠 Core Subsystems
-1. **Multi-Agent Orchestration Supervisor:** Manages consensus routines and context handoffs across isolated execution nodes (Quantitative Backtesting, Risk Mitigation, and Macro Market Analytics).
-2. **Distributed Ingestion Pipeline:** Leverages high-throughput messaging brokers to stream real-time market data variations non-blockingly into execution runtimes.
-3. **Semantic Memory Fabric:** Interfaces with optimized vector embeddings to perform ultra-low-latency similarity search retrieval across specialized historical corporate and market indices.
-4. **DevMLOps Telemetry Engine:** Monitored continuously via a 7-tier automation suite checking data model schemas, memory leakages, security exploits, and execution delays under 15ms.
+- Tickers, intervals, output sizes, prompt sizes, URLs, timeouts, and strategy signals are validated.
+- Market-provider responses must contain the expected time-series contract; provider error and
+  throttling payloads fail closed.
+- Retrieved data is labeled untrusted before it reaches the model. A system policy requires facts,
+  estimates, dates, limitations, and a research-only disclaimer to remain distinct.
+- API failures omit secrets and raw response bodies. No order-execution capability exists.
+- Backtests reject missing/non-positive prices, unordered data, invalid positions, and misaligned
+  signals. Results exclude fees, slippage, liquidity, taxes, and survivorship effects.
 
----
+## Verification
 
-## 🛠️ Environmental Ignition
+```bash
+ruff check src tests
+mypy src/config.py src/data_client.py src/llm_agent.py
+pytest
+bandit -r src -q
+python -m benchmarks.latency_benchmark --max-seconds 0.25
+docker build -t quant-llm-assistant .
+docker run --rm quant-llm-assistant --help
+```
 
-### 1. Pre-requisites & System Hydration
-Ensure Python 3.11+ and your message broker instances are provisioned and accessible.
+CI enforces these gates, 90% coverage across critical modules, dependency auditing, and a container
+smoke test. It never contacts live market or LLM services.
 
-### 2. Environment Configurations
-Construct a local `.env` file in the root workspace folder to provision credentials securely:
-```env
-OPENAI_API_KEY=your_secured_llm_token_here
-KAFKA_BOOTSTRAP_SERVERS=localhost:9092
-VECTOR_DB_ENDPOINT=your_vector_node_address
-3. Dependency Initialization
-Bash
-python -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-pip install --upgrade pip
-pip install -r requirements.txt
-4. Running the Intelligence Matrix
-Bash
-python src/main.py
-🧪 Automated System Assurance (7-Tier Matrix)
-This repository employs an advanced engineering lifecycle checking code state integrity continuously on every push:
+## Operations
 
-CI Matrix: Validates distributed streaming states and unit conditions.
-
-Flake8 Compliance: Enforces absolute PEP 8 syntax constraints across all scripts.
-
-TruffleHog Analyzer: Blocks commits containing leaked secrets or API strings.
-
-Bandit SAST Scans: Guards memory parsing, torch load routines, and multi-thread calls.
-
-Performance Benchmark Matrix: Profiles execution overhead to capture processing bottlenecks.
-
-Pydantic Contract Assertion: Validates real-time ingestion payload schemas dynamically.
+The CLI writes results to standard output and errors to the process error path. Monitor exit rate,
+provider latency/error rate, throttling responses, token consumption, and benchmark latency. Keep
+API keys in a secret manager, rotate them on exposure, and restrict outbound traffic to configured
+providers. See [docs/production-readiness.md](docs/production-readiness.md).
