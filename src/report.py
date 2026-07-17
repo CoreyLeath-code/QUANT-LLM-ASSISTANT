@@ -1,6 +1,8 @@
 import os
 from datetime import datetime
+
 from fpdf import FPDF
+
 
 class ReportGenerator:
     """
@@ -63,6 +65,3 @@ class ReportGenerator:
 
         pdf.output(pdf_path)
         return pdf_path
-
-git add src/report.py
-git commit -m "Add report generation module for Markdown and PDF outputs"
