@@ -5,9 +5,6 @@ on:
     tags:
       - "v*"
 
-permissions:
-  contents: write
-
 jobs:
   build:
     name: Build and validate package
@@ -28,7 +25,7 @@ jobs:
 
       - name: Verify tag matches package version
         env:
-          TAG_NAME: ${{ github.ref_name }}
+          TAG_NAME: ${{ github.ref_name }}}
         run: |
           python - <<'PY'
           import os
@@ -65,6 +62,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: write
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -79,12 +78,10 @@ jobs:
 
       - name: Create GitHub Release
         env:
-          GH_TOKEN: ${{ github.token }}
-          TAG_NAME: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}}
+          TAG_NAME: ${{ github.ref_name }}}
         run: |
-          gh release create "$TAG_NAME" dist/* \
-            --title "$TAG_NAME" \
-            --generate-notes
+          gh release create "$TAG_NAME" dist/*             --title "$TAG_NAME"             --generate-notes
 
   pypi-publish:
     name: Publish to PyPI
