@@ -1,5 +1,11 @@
 # Quant LLM Assistant
 
+<!-- portfolio-lifecycle-badges:start -->
+[![Latest release](https://img.shields.io/github/v/release/CoreyLeath-code/QUANT-LLM-ASSISTANT?display_name=tag&sort=semver)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/releases/latest)
+[![Lifecycle documentation](https://img.shields.io/badge/lifecycle-documented-2563eb)](#ownership-promotion-and-operational-lifecycle)
+[![Maintainer](https://img.shields.io/badge/maintainer-Corey%20Leath-111827)](https://github.com/CoreyLeath-code)
+<!-- portfolio-lifecycle-badges:end -->
+
 [![CI](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/CoreyLeath-code/QUANT-LLM-ASSISTANT/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
