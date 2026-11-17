@@ -71,7 +71,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download release distributions
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: release-dists
           path: dist/
@@ -95,7 +95,7 @@ jobs:
       id-token: write
     steps:
       - name: Download release distributions
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: release-dists
           path: dist/
