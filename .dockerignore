@@ -1,36 +1,41 @@
-# Byte-compiled / optimized files
+# Bytecode, caches, and local Python environments
 __pycache__/
 *.py[cod]
-*$py.class
-
-# Virtual environments
 venv/
+.venv/
 env/
-
-# Distribution / packaging
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 build/
 dist/
 *.egg-info/
 
-# Environment files
+# Real credentials and local state must never enter a published image
 .env
 .env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+*.key
+group_vars/
+inventories/
+ansible.cfg
+*.vault
 
-# Git
-.git
-.gitignore
-
-# Reports and outputs
-reports/
-*.md
-
-# Docker
-Dockerfile
-docker-compose.yml
-
-# IDEs and editors
+# Git, notebooks, test data, and local output are not runtime source
+.git/
+.github/
 .vscode/
 .idea/
+notebooks/
+tests/
+reports/
+artifacts/
+*.ipynb
+*.log
 
-git add .dockerignore
-git commit -m "Add .dockerignore to optimize Docker builds"
+# Container metadata
+Dockerfile
+docker-compose.yml
