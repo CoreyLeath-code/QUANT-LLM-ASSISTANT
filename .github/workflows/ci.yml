@@ -57,3 +57,9 @@ jobs:
       - uses: actions/checkout@v4
       - run: docker build --tag quant-llm-assistant:${{ github.sha }} .
       - run: docker run --rm quant-llm-assistant:${{ github.sha }} --help
+      - name: Verify runtime is non-root and secrets stay out of image
+        run: |
+          image="quant-llm-assistant:${{ github.sha }}"
+          test "$(docker run --rm --entrypoint id "$image" -u)" = "10001"
+          docker run --rm --entrypoint sh "$image" -c \
+            'test ! -e /app/.env && test ! -e /app/group_vars/production/vault.yml'
