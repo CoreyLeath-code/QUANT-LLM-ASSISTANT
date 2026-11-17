@@ -1,6 +1,6 @@
 # Runtime dependencies are constrained here for container builds; pyproject.toml is authoritative.
 python-dotenv>=1.0,<2
-openai>=1.30,<2
+openai>=1.30,<4
 requests>=2.32,<3
 pandas>=2.1,<4
 matplotlib>=3.8,<4
