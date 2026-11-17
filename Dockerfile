@@ -1,28 +1,24 @@
-# Use official Python runtime as a parent image
-FROM python:3.10-slim
+# Use the Python runtime required by pyproject.toml (>=3.11).
+FROM python:3.11-slim
 
-# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PYTHONPATH=/app \
+    HOME=/home/appuser
 
-# Create and set working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-      build-essential \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy and install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt ./
+RUN python -m pip install --no-cache-dir -r requirements.txt
 
-# Copy project source
-COPY . .
+RUN useradd --uid 10001 --create-home --shell /usr/sbin/nologin appuser
+COPY --chown=appuser:appuser src/ ./src/
+USER 10001:10001
 
-# Expose port if you later add a web interface
-# EXPOSE 8080
-
-# Default command (adjust as needed)
 ENTRYPOINT ["python", "-m", "src.main"]
