@@ -148,3 +148,14 @@ def test_llm_agent_rejects_invalid_prompt(prompt):
 def test_llm_agent_rejects_empty_response():
     with pytest.raises(RuntimeError):
         LLMAgent(client=CompletionClient(" ")).ask("hello")
+
+
+def test_installed_openai_sdk_supports_chat_completions_contract():
+    """Check the *installed* SDK surface without making a network request."""
+    from openai import OpenAI
+
+    client = OpenAI(api_key="offline-test-key", base_url="https://example.test/v1")
+    try:
+        assert callable(client.chat.completions.create)
+    finally:
+        client.close()
